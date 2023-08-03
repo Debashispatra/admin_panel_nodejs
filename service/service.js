@@ -1,19 +1,52 @@
 const User = require('../model/user_model')
 const jwt = require("jsonwebtoken");
 const ExcelJS = require('exceljs');
+const fs=require('fs')
+const path=require('path')
 
-
-exports.user_service =async (req, res) => {
+exports.user_service =async (req, res,user) => {
     try {
-        const { user_name, user_email, user_password } = req.body
-        const data =new User({
-            user_name, user_email, user_password
+        let data=user
+    console.log('data----',data);
+        const obj={
+            message:'file uploaded',
+            data:data
+        }
+        return obj
+        // const { user_name, user_email, user_password } = req.body
+        // const data =new User({
+        //     user_name, user_email, user_password,
+        //     imageData:{
+        //         data:fs.readFileSync(path.join(__dirname + '/uploads/' +  req.file.filename)),
+        //         contentType:req.file.mimetype
+        //     }
 
-        })
-        const user = data.save()
-        return user
+        // })
+        // const user = data.save()
+        // return user
     } catch (error) {
         console.log(error);
+    }
+}
+
+exports.getone_img = async(req,res)=>{
+    const {_id}=req.params
+    const data=await User.findById({_id :_id})
+    // console.log('data get',data);
+    if (data) {
+        const obj={
+            statusCode:0,
+            message:"Getting image",
+            image:data.imageData
+        }
+        // console.log('.....',obj.image);
+        return obj
+    } else {
+        const obj={
+            statusCode:1,
+            message:"Image didn't get"
+        }
+        return obj
     }
 }
 

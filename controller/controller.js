@@ -1,4 +1,6 @@
 const { user_service,
+    getone_img,
+    getallimg,
     user_service_update,
     getalluser,
     getOneUser,
@@ -8,12 +10,13 @@ const { user_service,
     excel_sheet } = require('../service/service')
 
 exports.user_add = async (req, res) => {
-    const add = await user_service(req, res)
+    const user=req.user;
+    const add = await user_service(req, res,user)
     try {
         if (add) {
             res.status(200).json({
-                message: 'user added',
-                data: add
+                message: 'User data added',
+                data: add.data
             })
         } else {
             res.status(500).json({
@@ -23,6 +26,27 @@ exports.user_add = async (req, res) => {
     } catch (error) {
         res.status(401).json({
             message: error
+        })
+    }
+}
+
+exports.getone_img= async(req,res)=>{
+    const getimg=await getone_img(req,res)
+    try {
+        if (getimg.statusCode === 0) {
+            // console.log(getimg.image);
+            res.set('Content-Type',getimg.image.contentType)
+            res.send(getimg.image.data)
+        }else{
+            res.status(200).json({
+                status:getimg.statusCode,
+                message:getimg.message
+            })
+        }
+    } catch (error) {
+        res.status(200).json({
+            message: "Didn't get image",
+            error: error
         })
     }
 }

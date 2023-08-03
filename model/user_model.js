@@ -23,8 +23,8 @@ const adminSchema = new mongoose.Schema({
         default:0,
     },
     imageData:{
-        imageData: Buffer
-        
+        data: Buffer,
+        contentType:String   
     }
 });
 
